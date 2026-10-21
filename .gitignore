@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Isaac Lab / 训练产物
+logs/
+outputs/
+*.pt
+*.pth
+*.mp4
+
+# 资产（模型/网格，体积大）
+*.usd
+*.usda
+*.usdc
+*.stl
+*.STL
+data/
+assets/
+dataset/
+
+# IDE / 系统
+.vscode/
+.idea/
+.DS_Store
