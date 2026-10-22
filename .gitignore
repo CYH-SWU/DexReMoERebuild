@@ -1,28 +1,92 @@
+# ---------------------------------------------------------------------------
 # Python
+# ---------------------------------------------------------------------------
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
 *.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
 .venv/
 venv/
+env/
+ENV/
 
-# Isaac Lab / 训练产物
+# ---------------------------------------------------------------------------
+# Datasets and assets (large binary files, re-downloadable)
+# ---------------------------------------------------------------------------
+assets/grasp_cache/
+assets/bodex/
+assets/allegro/
+assets/**/*.npy
+assets/**/*.npz
+assets/**/*.usd
+assets/**/*.usda
+assets/**/*.usdc
+assets/**/*.obj
+assets/**/*.stl
+assets/**/*.dae
+assets/**/*.tar.gz
+assets/**/*.zip
+
+# ---------------------------------------------------------------------------
+# Reference repos (cloned for reference, not part of this project)
+# ---------------------------------------------------------------------------
+_ref_hora/
+_ref_bodex/
+_ref_allegro_inhand/
+references/
+third_party/
+
+# ---------------------------------------------------------------------------
+# Logs and outputs
+# ---------------------------------------------------------------------------
 logs/
+*.log
 outputs/
-*.pt
+runs/
+wandb/
+checkpoints/
 *.pth
+*.pt
+*.ckpt
 *.mp4
+*.gif
 
-# 资产（模型/网格，体积大）
-*.usd
-*.usda
-*.usdc
-*.stl
-*.STL
-data/
-assets/
-dataset/
+# ---------------------------------------------------------------------------
+# Isaac Sim / Omniverse cache
+# ---------------------------------------------------------------------------
+.cache/
+__pycache__/
+*.kit
+ov/
+.ov/
 
-# IDE / 系统
+# ---------------------------------------------------------------------------
+# Editor and OS
+# ---------------------------------------------------------------------------
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 .DS_Store
+Thumbs.db
