@@ -98,7 +98,7 @@ class GraspVizSceneCfg(InteractiveSceneCfg):
         prim_path="{ENV_REGEX_NS}/Object",
         spawn=sim_utils.CuboidCfg(
             size=(0.08, 0.08, 0.08),
-            rigid_props=sim_utils.RigidBodyPropertiesCfg(disable_gravity=True),
+            rigid_props=sim_utils.RigidBodyPropertiesCfg(disable_gravity=False),
             mass_props=sim_utils.MassPropertiesCfg(mass=0.05),
             collision_props=sim_utils.CollisionPropertiesCfg(),
             visual_material=sim_utils.PreviewSurfaceCfg(diffuse_color=(0.2, 0.55, 0.9)),
@@ -232,20 +232,23 @@ def main():
 
     log(f"placed object at fingertip centroid: {np.round(tip_centroid, 4).tolist()}")
 
+    initial_obj_z = tip_centroid[2]
+    log(f"initial object z: {initial_obj_z:.4f} (gravity ON)")
     for i in range(args.steps):
         sim.step()
         scene.update(sim.get_physics_dt())
-        if i % 30 == 0 or i == args.steps - 1:
+        if i % 10 == 0 or i == args.steps - 1:
             obj_pos_now = obj.data.root_pos_w[0].tolist()
             hand_pos = robot.data.root_pos_w[0].tolist()
+            dz = obj_pos_now[2] - initial_obj_z
             tip_positions = {}
             if body_ids:
                 body_pos = robot.data.body_pos_w[0]
                 for name, bid in zip(fingertip_body_names, body_ids):
                     tip_positions[name] = body_pos[bid].tolist()
-            log(f"step {i:03d}: hand_base={hand_pos}, obj={obj_pos_now}")
+            log(f"step {i:03d}: obj_z={obj_pos_now[2]:.4f} (dz={dz:+.4f}) obj={[round(x,4) for x in obj_pos_now]}")
             for name, p in tip_positions.items():
-                log(f"    {name}: {p}")
+                log(f"    {name}: {[round(x,4) for x in p]}")
 
     # 4. dump final snapshot for offline analysis
     snapshot = {
