@@ -1,0 +1,353 @@
+{
+  "pd": {
+    "stiffness": 3.0,
+    "damping": 1.0
+  },
+  "steps": 60,
+  "threshold_formula": {
+    "pos_tol": "0.25 * size",
+    "ori_tol_deg": 30.0,
+    "z_drop_tol": "0.50 * size",
+    "z_final_tol": "0.40 * size"
+  },
+  "by_shape_scale": {
+    "train/s07/cylinder": {
+      "n_total": 17456,
+      "n_pass": 1772,
+      "pass_rate": 0.10151237396883593,
+      "object_size_cm": 5.599999904632568,
+      "pos_tol_cm": 1.399999976158142,
+      "z_drop_tol_cm": 2.799999952316284,
+      "z_final_tol_cm": 2.2399999618530275
+    },
+    "train/s07/cuboid": {
+      "n_total": 9934,
+      "n_pass": 957,
+      "pass_rate": 0.09633581638816187,
+      "object_size_cm": 5.599999904632568,
+      "pos_tol_cm": 1.399999976158142,
+      "z_drop_tol_cm": 2.799999952316284,
+      "z_final_tol_cm": 2.2399999618530275
+    },
+    "train/s07/sphere": {
+      "n_total": 22610,
+      "n_pass": 2038,
+      "pass_rate": 0.09013710747456878,
+      "object_size_cm": 5.599999904632568,
+      "pos_tol_cm": 1.399999976158142,
+      "z_drop_tol_cm": 2.799999952316284,
+      "z_final_tol_cm": 2.2399999618530275
+    },
+    "train/s072/cylinder": {
+      "n_total": 17456,
+      "n_pass": 1943,
+      "pass_rate": 0.11130843263061412,
+      "object_size_cm": 5.760000228881836,
+      "pos_tol_cm": 1.440000057220459,
+      "z_drop_tol_cm": 2.880000114440918,
+      "z_final_tol_cm": 2.3040000915527346
+    },
+    "train/s072/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1035,
+      "pass_rate": 0.1041876384135293,
+      "object_size_cm": 5.760000228881836,
+      "pos_tol_cm": 1.440000057220459,
+      "z_drop_tol_cm": 2.880000114440918,
+      "z_final_tol_cm": 2.3040000915527346
+    },
+    "train/s072/sphere": {
+      "n_total": 22610,
+      "n_pass": 2190,
+      "pass_rate": 0.09685979655019902,
+      "object_size_cm": 5.760000228881836,
+      "pos_tol_cm": 1.440000057220459,
+      "z_drop_tol_cm": 2.880000114440918,
+      "z_final_tol_cm": 2.3040000915527346
+    },
+    "train/s074/cylinder": {
+      "n_total": 17456,
+      "n_pass": 1889,
+      "pass_rate": 0.10821494042163153,
+      "object_size_cm": 5.920000076293945,
+      "pos_tol_cm": 1.4800000190734863,
+      "z_drop_tol_cm": 2.9600000381469727,
+      "z_final_tol_cm": 2.3680000305175786
+    },
+    "train/s074/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1118,
+      "pass_rate": 0.11254278236359976,
+      "object_size_cm": 5.920000076293945,
+      "pos_tol_cm": 1.4800000190734863,
+      "z_drop_tol_cm": 2.9600000381469727,
+      "z_final_tol_cm": 2.3680000305175786
+    },
+    "train/s074/sphere": {
+      "n_total": 22610,
+      "n_pass": 2409,
+      "pass_rate": 0.10654577620521893,
+      "object_size_cm": 5.920000076293945,
+      "pos_tol_cm": 1.4800000190734863,
+      "z_drop_tol_cm": 2.9600000381469727,
+      "z_final_tol_cm": 2.3680000305175786
+    },
+    "train/s076/cylinder": {
+      "n_total": 17456,
+      "n_pass": 2023,
+      "pass_rate": 0.11589138405132905,
+      "object_size_cm": 6.079999923706055,
+      "pos_tol_cm": 1.5199999809265137,
+      "z_drop_tol_cm": 3.0399999618530273,
+      "z_final_tol_cm": 2.431999969482422
+    },
+    "train/s076/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1282,
+      "pass_rate": 0.12905174149385948,
+      "object_size_cm": 6.079999923706055,
+      "pos_tol_cm": 1.5199999809265137,
+      "z_drop_tol_cm": 3.0399999618530273,
+      "z_final_tol_cm": 2.431999969482422
+    },
+    "train/s076/sphere": {
+      "n_total": 22610,
+      "n_pass": 2691,
+      "pass_rate": 0.11901813356921716,
+      "object_size_cm": 6.079999923706055,
+      "pos_tol_cm": 1.5199999809265137,
+      "z_drop_tol_cm": 3.0399999618530273,
+      "z_final_tol_cm": 2.431999969482422
+    },
+    "train/s078/cylinder": {
+      "n_total": 17456,
+      "n_pass": 2215,
+      "pass_rate": 0.1268904674610449,
+      "object_size_cm": 6.239999771118164,
+      "pos_tol_cm": 1.559999942779541,
+      "z_drop_tol_cm": 3.119999885559082,
+      "z_final_tol_cm": 2.4959999084472657
+    },
+    "train/s078/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1325,
+      "pass_rate": 0.13338031004630563,
+      "object_size_cm": 6.239999771118164,
+      "pos_tol_cm": 1.559999942779541,
+      "z_drop_tol_cm": 3.119999885559082,
+      "z_final_tol_cm": 2.4959999084472657
+    },
+    "train/s078/sphere": {
+      "n_total": 22610,
+      "n_pass": 2984,
+      "pass_rate": 0.13197700132684653,
+      "object_size_cm": 6.239999771118164,
+      "pos_tol_cm": 1.559999942779541,
+      "z_drop_tol_cm": 3.119999885559082,
+      "z_final_tol_cm": 2.4959999084472657
+    },
+    "train/s08/cylinder": {
+      "n_total": 17456,
+      "n_pass": 2425,
+      "pass_rate": 0.13892071494042163,
+      "object_size_cm": 6.4000000953674325,
+      "pos_tol_cm": 1.6000000238418581,
+      "z_drop_tol_cm": 3.2000000476837163,
+      "z_final_tol_cm": 2.5600000381469727
+    },
+    "train/s08/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1384,
+      "pass_rate": 0.1393195087578015,
+      "object_size_cm": 6.4000000953674325,
+      "pos_tol_cm": 1.6000000238418581,
+      "z_drop_tol_cm": 3.2000000476837163,
+      "z_final_tol_cm": 2.5600000381469727
+    },
+    "train/s08/sphere": {
+      "n_total": 22610,
+      "n_pass": 3187,
+      "pass_rate": 0.14095532950022113,
+      "object_size_cm": 6.4000000953674325,
+      "pos_tol_cm": 1.6000000238418581,
+      "z_drop_tol_cm": 3.2000000476837163,
+      "z_final_tol_cm": 2.5600000381469727
+    },
+    "train/s082/cylinder": {
+      "n_total": 17456,
+      "n_pass": 2488,
+      "pass_rate": 0.14252978918423465,
+      "object_size_cm": 6.559999942779542,
+      "pos_tol_cm": 1.6399999856948855,
+      "z_drop_tol_cm": 3.279999971389771,
+      "z_final_tol_cm": 2.6239999771118168
+    },
+    "train/s082/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1448,
+      "pass_rate": 0.1457620293940004,
+      "object_size_cm": 6.559999942779542,
+      "pos_tol_cm": 1.6399999856948855,
+      "z_drop_tol_cm": 3.279999971389771,
+      "z_final_tol_cm": 2.6239999771118168
+    },
+    "train/s082/sphere": {
+      "n_total": 22610,
+      "n_pass": 3437,
+      "pass_rate": 0.1520123839009288,
+      "object_size_cm": 6.559999942779542,
+      "pos_tol_cm": 1.6399999856948855,
+      "z_drop_tol_cm": 3.279999971389771,
+      "z_final_tol_cm": 2.6239999771118168
+    },
+    "train/s084/cylinder": {
+      "n_total": 17456,
+      "n_pass": 2616,
+      "pass_rate": 0.14986251145737856,
+      "object_size_cm": 6.719999790191651,
+      "pos_tol_cm": 1.6799999475479128,
+      "z_drop_tol_cm": 3.3599998950958256,
+      "z_final_tol_cm": 2.687999916076661
+    },
+    "train/s084/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1586,
+      "pass_rate": 0.15965371451580432,
+      "object_size_cm": 6.719999790191651,
+      "pos_tol_cm": 1.6799999475479128,
+      "z_drop_tol_cm": 3.3599998950958256,
+      "z_final_tol_cm": 2.687999916076661
+    },
+    "train/s084/sphere": {
+      "n_total": 22610,
+      "n_pass": 3752,
+      "pass_rate": 0.16594427244582044,
+      "object_size_cm": 6.719999790191651,
+      "pos_tol_cm": 1.6799999475479128,
+      "z_drop_tol_cm": 3.3599998950958256,
+      "z_final_tol_cm": 2.687999916076661
+    },
+    "train/s086/cylinder": {
+      "n_total": 17456,
+      "n_pass": 2909,
+      "pass_rate": 0.166647571035747,
+      "object_size_cm": 6.880000114440918,
+      "pos_tol_cm": 1.7200000286102295,
+      "z_drop_tol_cm": 3.440000057220459,
+      "z_final_tol_cm": 2.7520000457763674
+    },
+    "train/s086/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1671,
+      "pass_rate": 0.16821018723575598,
+      "object_size_cm": 6.880000114440918,
+      "pos_tol_cm": 1.7200000286102295,
+      "z_drop_tol_cm": 3.440000057220459,
+      "z_final_tol_cm": 2.7520000457763674
+    },
+    "train/s086/sphere": {
+      "n_total": 22610,
+      "n_pass": 3979,
+      "pass_rate": 0.17598407784166298,
+      "object_size_cm": 6.880000114440918,
+      "pos_tol_cm": 1.7200000286102295,
+      "z_drop_tol_cm": 3.440000057220459,
+      "z_final_tol_cm": 2.7520000457763674
+    },
+    "test/s066/cylinder": {
+      "n_total": 17456,
+      "n_pass": 1670,
+      "pass_rate": 0.09566911090742439,
+      "object_size_cm": 5.28000020980835,
+      "pos_tol_cm": 1.3200000524520874,
+      "z_drop_tol_cm": 2.640000104904175,
+      "z_final_tol_cm": 2.11200008392334
+    },
+    "test/s066/cuboid": {
+      "n_total": 9934,
+      "n_pass": 810,
+      "pass_rate": 0.08153815180189249,
+      "object_size_cm": 5.28000020980835,
+      "pos_tol_cm": 1.3200000524520874,
+      "z_drop_tol_cm": 2.640000104904175,
+      "z_final_tol_cm": 2.11200008392334
+    },
+    "test/s066/sphere": {
+      "n_total": 22610,
+      "n_pass": 1689,
+      "pass_rate": 0.07470145953118089,
+      "object_size_cm": 5.28000020980835,
+      "pos_tol_cm": 1.3200000524520874,
+      "z_drop_tol_cm": 2.640000104904175,
+      "z_final_tol_cm": 2.11200008392334
+    },
+    "test/s09/cylinder": {
+      "n_total": 17456,
+      "n_pass": 3302,
+      "pass_rate": 0.18916131989000917,
+      "object_size_cm": 7.199999809265137,
+      "pos_tol_cm": 1.7999999523162842,
+      "z_drop_tol_cm": 3.5999999046325684,
+      "z_final_tol_cm": 2.879999923706055
+    },
+    "test/s09/cuboid": {
+      "n_total": 9934,
+      "n_pass": 1739,
+      "pass_rate": 0.17505536541171735,
+      "object_size_cm": 7.199999809265137,
+      "pos_tol_cm": 1.7999999523162842,
+      "z_drop_tol_cm": 3.5999999046325684,
+      "z_final_tol_cm": 2.879999923706055
+    },
+    "test/s09/sphere": {
+      "n_total": 22610,
+      "n_pass": 4730,
+      "pass_rate": 0.20919946926138877,
+      "object_size_cm": 7.199999809265137,
+      "pos_tol_cm": 1.7999999523162842,
+      "z_drop_tol_cm": 3.5999999046325684,
+      "z_final_tol_cm": 2.879999923706055
+    }
+  },
+  "by_size_bucket": {
+    "small": {
+      "scales": [
+        "s07",
+        "s072",
+        "s074"
+      ],
+      "n_total": 150000,
+      "n_pass": 15351,
+      "pass_rate": 0.10234
+    },
+    "medium": {
+      "scales": [
+        "s076",
+        "s078",
+        "s08"
+      ],
+      "n_total": 150000,
+      "n_pass": 19516,
+      "pass_rate": 0.13010666666666668
+    },
+    "large": {
+      "scales": [
+        "s082",
+        "s084",
+        "s086"
+      ],
+      "n_total": 150000,
+      "n_pass": 23886,
+      "pass_rate": 0.15924
+    },
+    "test": {
+      "scales": [
+        "s066",
+        "s09"
+      ],
+      "n_total": 100000,
+      "n_pass": 13940,
+      "pass_rate": 0.1394
+    }
+  }
+}

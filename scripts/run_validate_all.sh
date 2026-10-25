@@ -36,6 +36,7 @@ run_group() {
         echo "[skip] missing $npz"
         return 0
     fi
+    local log_file="/tmp/val_${split}_${scale_name}_${shape_id}.log"
     echo "===== group: $split / $scale_name / shape=$shape_id ====="
     python "$SCRIPT" \
         --npz "$npz" \
@@ -45,8 +46,11 @@ run_group() {
         --output_dir "$OUT_DIR" \
         --log_dir "$LOG_DIR" \
         --num_envs "$NUM_ENVS" \
-        2>&1 | tee "/tmp/val_${split}_${scale_name}_${shape_id}.log" \
-        | grep -a 'SUMMARY_JSON' >> "$SUMMARY_FILE"
+        > "$log_file" 2>&1
+    local rc=$?
+    # Extract summary from the finished log (no pipe buffering involved)
+    grep -a 'SUMMARY_JSON' "$log_file" >> "$SUMMARY_FILE" || true
+    return $rc
 }
 
 START=$(date +%s)

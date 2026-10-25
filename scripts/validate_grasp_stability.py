@@ -293,7 +293,12 @@ def main():
     print(f"[{tag}] DONE n_pass={n_pass}/{n} ({n_pass/n*100:.1f}%)", flush=True)
     print(f"SUMMARY_JSON {json.dumps(summary)}", flush=True)
 
-    app.close()
+    # Force-exit instead of app.close(): Kit shutdown can hang for minutes and
+    # blocks the shell driver from starting the next group.
+    import sys
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(0)
 
 
 if __name__ == "__main__":
