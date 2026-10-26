@@ -127,13 +127,18 @@ class CommandsCfg:
 @configclass
 class RewardsCfg:
     success = RewTerm(func=dex_mdp.success_bonus, weight=800.0)
-    orientation = RewTerm(func=dex_mdp.orientation_inv_track, weight=1.0)
-    pos_penalty = RewTerm(func=dex_mdp.position_l2_penalty, weight=-10.0)
+    # Positive signal doubled so it does not get drowned by the accumulated
+    # per-step penalties as episodes grow from ~50 to ~500 steps.
+    orientation = RewTerm(func=dex_mdp.orientation_inv_track, weight=2.0)
+    # -10 -> -5: after episode lengths grew 10x, the cumulative pos penalty
+    # was dominating the reward and burying the orientation signal.
+    pos_penalty = RewTerm(func=dex_mdp.position_l2_penalty, weight=-5.0)
     joint_vel = RewTerm(
         func=dex_mdp.joint_vel_clipped_penalty, weight=-0.0002, params={"clip": 6.0}
     )
     action_l2 = RewTerm(func=mdp.action_l2, weight=-0.0001)
-    action_rate = RewTerm(func=mdp.action_rate_l2, weight=-0.01)
+    # -0.01 -> -0.005: halved to stop punishing early jittery exploration.
+    action_rate = RewTerm(func=mdp.action_rate_l2, weight=-0.005)
 
 
 # ---------------------------------------------------------------- terminations

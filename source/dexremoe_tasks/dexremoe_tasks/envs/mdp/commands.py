@@ -169,6 +169,9 @@ class DexReMoECommand(CommandTerm):
 
         self.metrics["max_consecutive_success"] = self._max_consec.clone()
         self.metrics["hold_counter"] = self._hold.float()
+        # Diagnostic: orientation error in degrees. Direct read is far easier
+        # than back-solving from Episode_Reward/orientation.
+        self.metrics["dtheta_deg"] = dtheta * 180.0 / math.pi
 
 
 @configclass
@@ -181,11 +184,15 @@ class DexReMoECommandCfg(CommandTermCfg):
     robot_name: str = "robot"
 
     # success thresholds (rad, rad/s, m/s, rad/s)
-    tau_theta: float = 0.1
+    # tau_theta relaxed from 0.1 to 0.15 so a fresh policy (avg err ~87 deg)
+    # can occasionally trigger success and get the +800 signal.
+    tau_theta: float = 0.15
     tau_q: float = 10.0
     tau_v: float = 0.04
     tau_w: float = 0.5
 
-    sustained_hold_steps: int = 5
+    # 5 -> 3: the policy is still jittery early on; 5 consecutive steps is
+    # essentially unreachable, so success never fires.
+    sustained_hold_steps: int = 3
     min_initial_angle: float = math.pi / 2.0
     make_quat_unique: bool = True

@@ -36,18 +36,28 @@ def _parse_args():
     p.add_argument("--seed", type=int, default=0)
     # --- PPO hyper-parameters, aligned with paper Table II ---
     # learning_rate: paper 5e-3
-    # num_steps_per_env (horizon length): paper 8
+    # num_steps_per_env (horizon length): paper 8, ours 24.
+    #   Paper ran 32768 envs. At 64 envs, T=8 gives only 512 samples/iter and
+    #   a rollout that is far shorter than the GAE effective horizon (~20
+    #   with lam=0.95), so value bootstrap is inaccurate and every episode is
+    #   split across 75 iterations. T=24 matches the GAE horizon, keeps the
+    #   on-policy assumption healthy (ratio stays near 1), and gives 1536
+    #   samples/iter. T > ~40 would violate on-policy assumptions.
     # desired_kl (kl threshold): paper 0.02
     # clip_param: paper 0.2 (fixed below)
     # gamma: paper 0.99 (fixed below)
     # lam (PPO tau): paper 0.95 (fixed below)
     #
     # Paper minibatch = 16384 over 262144 total samples = 16 mini-batches.
-    # At 128 env * 8 horizon = 1024 samples, 16 splits gives 64 samples/batch,
-    # which is very noisy. `--num_mini_batches` can be overridden; a rule of
-    # thumb is `num_envs * num_steps_per_env / 256` (target ~256 per batch).
-    p.add_argument("--learning_rate", type=float, default=5e-3)
-    p.add_argument("--num_steps_per_env", type=int, default=8)
+    # At 64 env * 24 horizon = 1536 samples, 16 splits gives 96 samples/batch,
+    # which is noisy. `--num_mini_batches` can be overridden; a rule of thumb
+    # is `num_envs * num_steps_per_env / 256` (target ~256 per batch).
+    # 5e-3 is the paper value, but it assumes 262144 samples/iter. At 64 env
+    # * 24 horizon = 1536 samples/iter the gradient is ~170x noisier and KL
+    # routinely overshoots desired_kl. Starting at 3e-3 with the adaptive
+    # scheduler (which is already in RSL-RL) is a gentler warm start.
+    p.add_argument("--learning_rate", type=float, default=3e-3)
+    p.add_argument("--num_steps_per_env", type=int, default=24)
     p.add_argument("--num_mini_batches", type=int, default=None,
                    help="Override mini-batch count. Default: max(1, min(16, num_envs * horizon // 256)), "
                         "i.e. target ~256 samples/batch while capping at the paper ratio 1/16.")
@@ -55,6 +65,9 @@ def _parse_args():
                    help="Std of the action distribution at init. Action scale is 0.175; "
                         "0.5 -> joint jitter of ~0.09 rad per step.")
     p.add_argument("--log_dir", type=str, default=None)
+    p.add_argument("--run_name", type=str, default=None,
+                   help="If set, checkpoint and tensorboard logs go to "
+                        "logs/rsl_rl/base_policy/<run_name>/ instead of a timestamp.")
     p.add_argument("--cache_root", type=str,
                    default="/home/chen/my_project/DexReMoERebuild/assets/grasp_cache_isaac_validated")
     p.add_argument("--resume", type=str, default=None,
@@ -198,13 +211,18 @@ def main():
     _opr.DexReMoEActorCritic = DexReMoEActorCritic
 
     # ---- log dir ----
-    if ARGS.log_dir is None:
+    if ARGS.log_dir is not None:
+        log_dir = ARGS.log_dir
+    elif ARGS.run_name is not None:
+        log_dir = os.path.join(
+            "/home/chen/my_project/DexReMoERebuild/logs/rsl_rl/base_policy",
+            ARGS.run_name,
+        )
+    else:
         ts = _dt.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         log_dir = os.path.join(
             "/home/chen/my_project/DexReMoERebuild/logs/rsl_rl/base_policy", ts
         )
-    else:
-        log_dir = ARGS.log_dir
     os.makedirs(log_dir, exist_ok=True)
     print(f"[train] log_dir            = {log_dir}", flush=True)
 
