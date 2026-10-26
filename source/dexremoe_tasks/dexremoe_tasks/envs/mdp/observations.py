@@ -35,12 +35,26 @@ def policy_obs(env: ManagerBasedRLEnv, robot_cfg: SceneEntityCfg = SceneEntityCf
 # --------------------------------------------------------------- privileged (22)
 
 
+def _size_bucket_one_hot(scale: torch.Tensor) -> torch.Tensor:
+    """4-dim bucket one-hot. Boundaries 0.74/0.78/0.82 with float32 eps."""
+    eps = 1e-4
+    b0 = (scale <= 0.74 + eps).float()
+    b1 = ((scale > 0.74 + eps) & (scale <= 0.78 + eps)).float()
+    b2 = ((scale > 0.78 + eps) & (scale <= 0.82 + eps)).float()
+    b3 = (scale > 0.82 + eps).float()
+    return torch.stack([b0, b1, b2, b3], dim=-1)
+
+
 def privileged_obs(env: ManagerBasedRLEnv) -> torch.Tensor:
-    """e_phys (19) + one_hot shape (3)."""
+    """e_phys (19) + size_bucket_one_hot (4) = 23.
+
+    Shape is NOT encoded here: the PointNet is the sole source of shape
+    information. Size appears twice on purpose: `scale` is the continuous
+    value inside e_phys, and the 4-dim bucket one-hot gives a discrete cue.
+    """
     obj = env.active_root_state_w()
     cmd: DexReMoECommand = env.command_manager.get_term("object_pose")
 
-    # e_phys
     mass = env.active_mass().unsqueeze(-1)                                     # 1
     friction = torch.ones(env.num_envs, 1, device=env.device)                  # 1 (constant)
     scale = env.active_scale().unsqueeze(-1)                                   # 1
@@ -52,24 +66,19 @@ def privileged_obs(env: ManagerBasedRLEnv) -> torch.Tensor:
     ang_vel = obj["ang_vel"]                                                   # 3
     e_phys = torch.cat([mass, friction, scale, com, pos_diff, quat_diff, lin_vel, ang_vel], dim=-1)
 
-    # one-hot by geom_idx
-    one_hot = torch.zeros(env.num_envs, 3, device=env.device)
-    one_hot.scatter_(1, env.active_geom_idx.unsqueeze(-1), 1.0)
+    size_one_hot = _size_bucket_one_hot(env.active_scale())                    # 4
 
-    return torch.cat([e_phys, one_hot], dim=-1)  # (N, 22)
+    return torch.cat([e_phys, size_one_hot], dim=-1)  # (N, 23)
 
 
 # --------------------------------------------------------------- size_encoding (5)
 
 
 def size_encoding_obs(env: ManagerBasedRLEnv) -> torch.Tensor:
-    """[scale, b0?, b1?, b2?, b3?] with b0 lower-open, b3 upper-open."""
+    """[scale, b0?, b1?, b2?, b3?] with b0 lower-open, b3 upper-open. Gate only."""
     scale = env.active_scale()
-    b0 = (scale <= 0.74).float()
-    b1 = ((scale > 0.74) & (scale <= 0.78)).float()
-    b2 = ((scale > 0.78) & (scale <= 0.82)).float()
-    b3 = (scale > 0.82).float()
-    return torch.stack([scale, b0, b1, b2, b3], dim=-1)  # (N, 5)
+    one_hot = _size_bucket_one_hot(scale)
+    return torch.cat([scale.unsqueeze(-1), one_hot], dim=-1)  # (N, 5)
 
 
 # --------------------------------------------------------------- point_cloud (512, 3)

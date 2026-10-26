@@ -44,7 +44,12 @@ class ResetFromGraspCache(ManagerTermBase):
                 n_per_file=env.cfg.eval_n_per_file, seed=env.cfg.eval_seed
             )
             n_eval = int(data["joint"].shape[0])
-            idx = torch.randint(0, n_eval, (K,), generator=self._eval_rng).to(data["joint"].device)
+            # Fixed mapping: env i -> eval pool row (eval_offset + i) % n_eval.
+            # This is deterministic so two resets give identical rows.
+            # eval_offset lets an eval script cover the whole pool in chunks.
+            offset = int(getattr(env, "eval_offset", 0))
+            base = torch.arange(K, device="cpu", dtype=torch.long)
+            idx = ((base + offset) % n_eval).to(data["joint"].device)
             data = {
                 k: (v[idx] if isinstance(v, torch.Tensor) and v.shape[0] == n_eval else v)
                 for k, v in data.items()
@@ -70,7 +75,15 @@ class ResetFromGraspCache(ManagerTermBase):
         # --- 3. activate the right prim, park the rest ---
         env.active_prim_idx[env_ids] = prim_idx
 
-        world_pos = pos + env.scene.env_origins[env_ids]
+        # The cache stores object positions relative to the hand root at
+        # `cache_hand_z` (0.5 during validation). Shift z by the current
+        # hand-root z offset so the object still sits at the fingertip.
+        hand_z_now = env.scene["robot"].data.root_pos_w[env_ids, 2] - env.scene.env_origins[env_ids, 2]
+        z_offset = (hand_z_now - env.cfg.cache_hand_z).unsqueeze(-1)  # (K, 1)
+        local_pos = pos.clone()
+        local_pos[:, 2:3] += z_offset
+
+        world_pos = local_pos + env.scene.env_origins[env_ids]
         root = torch.zeros(K, 13, device=env.device)
         root[:, 0:3] = world_pos
         root[:, 3:7] = quat

@@ -14,7 +14,7 @@ from isaaclab_assets.robots.allegro import ALLEGRO_HAND_CFG
 
 ALLEGRO_DEXREMOE_CFG = ALLEGRO_HAND_CFG.replace(
     prim_path="{ENV_REGEX_NS}/Robot",
-    init_state=ALLEGRO_HAND_CFG.init_state.replace(pos=(0.0, 0.0, 0.6)),
+    init_state=ALLEGRO_HAND_CFG.init_state.replace(pos=(0.0, 0.0, 1.0)),
     spawn=ALLEGRO_HAND_CFG.spawn.replace(
         articulation_props=sim_utils.ArticulationRootPropertiesCfg(
             fix_root_link=True,

@@ -12,8 +12,7 @@ from isaaclab.managers import ObservationTermCfg as ObsTerm
 from isaaclab.managers import RewardTermCfg as RewTerm
 from isaaclab.managers import TerminationTermCfg as DoneTerm
 from isaaclab.scene import InteractiveSceneCfg
-from isaaclab.sim import PhysxCfg, SimulationCfg
-from isaaclab.sim.spawners.materials.physics_materials_cfg import RigidBodyMaterialCfg
+from isaaclab.sim import SimulationCfg
 from isaaclab.utils import configclass
 
 from ..assets import ALLEGRO_DEXREMOE_CFG
@@ -61,11 +60,13 @@ class DexReMoESceneCfg(InteractiveSceneCfg):
 
 @configclass
 class ActionsCfg:
-    joint_pos = mdp.EMAJointPositionToLimitsActionCfg(
+    # Grasp-relative action: `action=0` maps to the fixed nominal grasp pose,
+    # so a freshly-initialized policy already holds a light-close grasp.
+    joint_pos = dex_mdp.GraspRelativeActionCfg(
         asset_name="robot",
         joint_names=[".*"],
+        scale=0.175,
         alpha=0.8,
-        rescale_to_limits=True,
     )
 
 
@@ -164,15 +165,11 @@ class EventCfg:
 @configclass
 class DexReMoEReorientEnvCfg(ManagerBasedRLEnvCfg):
     scene: DexReMoESceneCfg = DexReMoESceneCfg(num_envs=128, env_spacing=3.0)
-    sim: SimulationCfg = SimulationCfg(
-        dt=1.0 / 120.0,
-        physics_material=RigidBodyMaterialCfg(static_friction=1.0, dynamic_friction=1.0),
-        physx=PhysxCfg(
-            bounce_threshold_velocity=0.2,
-            gpu_max_rigid_contact_count=2**20,
-            gpu_max_rigid_patch_count=2**23,
-        ),
-    )
+    # Use SimulationCfg defaults (friction 0.5/0.5, bounce 0.5) so the training
+    # physics matches validate_grasp_stability.py exactly. The earlier explicit
+    # 1.0/1.0 friction double-counted contact and made the object stick to the
+    # fingers, which showed up as 2cm drift in V2.
+    sim: SimulationCfg = SimulationCfg(dt=1.0 / 60.0)
     actions: ActionsCfg = ActionsCfg()
     observations: ObservationsCfg = ObservationsCfg()
     commands: CommandsCfg = CommandsCfg()
@@ -190,10 +187,11 @@ class DexReMoEReorientEnvCfg(ManagerBasedRLEnvCfg):
     scale_values: dict = SCALE_VALUES
     geom_names: tuple = GEOM_NAMES
     hora_base_size_m: float = HORA_BASE_SIZE_M
-    point_cloud_points: int = 512
+    point_cloud_points: int = 256
+    cache_hand_z: float = 0.5  # hand root z when the cache was validated
 
     def __post_init__(self):
-        self.decimation = 2
+        self.decimation = 1
         self.episode_length_s = 10.0
         self.sim.render_interval = self.decimation
         self.viewer.eye = (2.0, 2.0, 2.0)

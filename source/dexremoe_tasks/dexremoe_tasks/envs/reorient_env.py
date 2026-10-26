@@ -29,6 +29,7 @@ class DexReMoEReorientEnv(ManagerBasedRLEnv):
         self.object_size_m = torch.full((cfg.scene.num_envs,), 0.064, device=cfg.sim.device)
         self._prim_park_offset = torch.zeros(0, 3, device=cfg.sim.device)
         self._point_clouds = None
+        self.eval_offset = 0  # for eval_mode: env i uses eval pool row (offset + i) % n_eval
         super().__init__(cfg=cfg, render_mode=render_mode, **kwargs)
 
     def load_managers(self) -> None:
@@ -84,12 +85,33 @@ class DexReMoEReorientEnv(ManagerBasedRLEnv):
             pts[np.arange(n), axis] = side
             return pts.astype(np.float32)
 
-        # cylinder: radius 0.5, height 1.0, z in [-0.5, 0.5]
+        # cylinder: radius 0.5, height 1.0, axis = Z (matches CylinderCfg default).
+        # Full surface: side wall + both end caps.
         def sample_cylinder():
-            theta = rng.uniform(0, 2 * np.pi, size=n)
-            z = rng.uniform(-0.5, 0.5, size=n)
-            r = np.full(n, 0.5)
-            return np.stack([r * np.cos(theta), r * np.sin(theta), z], axis=-1).astype(np.float32)
+            n_side = int(n * 0.6)
+            n_cap_top = (n - n_side) // 2
+            n_cap_bot = n - n_side - n_cap_top
+
+            # side wall: r = 0.5, z uniform
+            theta = rng.uniform(0, 2 * np.pi, size=n_side)
+            z = rng.uniform(-0.5, 0.5, size=n_side)
+            side = np.stack(
+                [0.5 * np.cos(theta), 0.5 * np.sin(theta), z], axis=-1
+            )
+
+            # end caps: disk sampled area-uniformly (r = 0.5 * sqrt(u))
+            def disk(z_val: float, count: int) -> np.ndarray:
+                u = rng.uniform(0.0, 1.0, size=count)
+                theta = rng.uniform(0, 2 * np.pi, size=count)
+                r = 0.5 * np.sqrt(u)
+                return np.stack(
+                    [r * np.cos(theta), r * np.sin(theta), np.full(count, z_val)],
+                    axis=-1,
+                )
+
+            top = disk(+0.5, n_cap_top)
+            bot = disk(-0.5, n_cap_bot)
+            return np.concatenate([side, top, bot], axis=0).astype(np.float32)
 
         # sphere: radius 0.5, uniform on surface
         def sample_sphere():
